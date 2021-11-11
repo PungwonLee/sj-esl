@@ -8,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import sj.sjesl.dto.ExcelFacilityDto;
@@ -48,29 +49,8 @@ class RepositoryTest {
     }
     @Test
     public void 연습() {
-        Member member = new Member();
-        memberRepository.save(member);
-
-//        ReservationInquiry reservationInquiry = new ReservationInquiry(member, "안녕", "이거야");
-//        reservationInquiryRepository.save(reservationInquiry);
-
-        List<Member> resultList = em.createQuery("select m from Member m where m.username=:username", Member.class)
-                .setParameter("username", "이풍원")
-                .getResultList();
-
-        for (Member member1 :  resultList){
-            System.out.println("member = "+member1);
-        }
-        //Dto 로 했을때 ..
-        List<MemberDto> resultList1 = em.createQuery("select new sj.sjesl.dto.MemberDto(m.memberId,m.username) from Member m where m.username=:username", MemberDto.class)
-                .setParameter("username", "이풍원")
-                .getResultList();
-        
-        // APi 페이징
-        em.createQuery("select m from Member m order by m.memberId desc ", Member.class)
-                .setFirstResult(0)
-                .setMaxResults(10)
-                .getResultList();
+//        @Query("select m from Member m where m.username = ?1")
+//        em.createQuery("select r from Reservation  r where r.startDateTime <= ");
 
     }
 

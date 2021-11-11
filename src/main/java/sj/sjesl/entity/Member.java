@@ -17,8 +17,10 @@ import java.util.List;
 public class Member implements Persistable<Long> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long memberId;
+
+    private Long userId;
     private String username;
     private String email;
     private String mobile;

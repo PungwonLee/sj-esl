@@ -2,7 +2,6 @@ package sj.sjesl.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +18,13 @@ import org.springframework.util.ObjectUtils;
 import sj.sjesl.config.auth.PrincipalDetail;
 import sj.sjesl.config.auth.SecurityUtil;
 import sj.sjesl.config.jwt.JwtTokenProvider;
-import sj.sjesl.dto.MemberDto;
 import sj.sjesl.dto.MemberRequestDto;
 import sj.sjesl.dto.MemberResponseDto;
 import sj.sjesl.entity.Member;
 import sj.sjesl.entity.MemberPrivileges;
-import sj.sjesl.payload.ApiResponse;
-import sj.sjesl.payload.AuthResponse;
 import sj.sjesl.payload.Response;
 import sj.sjesl.repository.MemberRepository;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -84,7 +79,7 @@ public class MemberService {
 
         // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
         redisTemplate.opsForValue()
-                .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+                .set("RT:" + ((PrincipalDetail) authentication.getPrincipal()).getMember().getId(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
 
 
@@ -110,6 +105,7 @@ public class MemberService {
         Optional<Member> byEmail = memberRepository.findByEmail(login.getEmail());
         Member member =byEmail.get();
         PrincipalDetail principalDetail= PrincipalDetail.create(member);
+
         // OAuth 인지 일반 로그인인지 구분할 필요가 없음. 왜냐하면 password를 Authentication이 가질 필요가 없으니!!
         // JWT가 로그인 프로세스를 가로채서 인증다 해버림. (OAuth2.0이든 그냥 일반 로그인 이든)
 //
@@ -126,12 +122,11 @@ public class MemberService {
 
         PrincipalDetail principal = (PrincipalDetail) authentication.getPrincipal();
 
-        System.out.println(authentication);
+        System.out.println(((PrincipalDetail) authentication.getPrincipal()).getMember().getId());
         System.out.println(principal.getMember().toString());
-        System.out.println("TOenasldkaskdbad222222222222"+tokenInfo.toString());
         // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
         redisTemplate.opsForValue()
-                .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+                .set("RT:" + ((PrincipalDetail) authentication.getPrincipal()).getMember().getId(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         return response.success(tokenInfo, "로그인에 성공했습니다.", HttpStatus.OK);
     }
@@ -146,7 +141,7 @@ public class MemberService {
         Authentication authentication = jwtTokenProvider.getAuthentication(reissue.getAccessToken());
 
         // 3. Redis 에서 User email 을 기반으로 저장된 Refresh Token 값을 가져옵니다.
-        String refreshToken = (String)redisTemplate.opsForValue().get("RT:" + authentication.getName());
+        String refreshToken = (String)redisTemplate.opsForValue().get("RT:" + ((PrincipalDetail) authentication.getPrincipal()).getMember().getId());
         // (추가) 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
         if(ObjectUtils.isEmpty(refreshToken)) {
             return response.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
@@ -160,7 +155,7 @@ public class MemberService {
 
         // 5. RefreshToken Redis 업데이트
         redisTemplate.opsForValue()
-                .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+                .set("RT:" + ((PrincipalDetail) authentication.getPrincipal()).getMember().getId(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
         return response.success(tokenInfo, "Token 정보가 갱신되었습니다.", HttpStatus.OK);
     }
@@ -175,9 +170,9 @@ public class MemberService {
         Authentication authentication = jwtTokenProvider.getAuthentication(logout.getAccessToken());
 
         // 3. Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
-        if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
+        if (redisTemplate.opsForValue().get("RT:" + ((PrincipalDetail) authentication.getPrincipal()).getMember().getId() )!= null) {
             // Refresh Token 삭제
-            redisTemplate.delete("RT:" + authentication.getName());
+            redisTemplate.delete("RT:" + ((PrincipalDetail) authentication.getPrincipal()).getMember().getId());
         }
 
         // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
@@ -190,9 +185,9 @@ public class MemberService {
 
     public ResponseEntity<?> authority() {
         // SecurityContext에 담겨 있는 authentication userEamil 정보
-        String userEmail = SecurityUtil.getCurrentUserEmail();
+        Long id = SecurityUtil.getCurrentMemberId();
 
-        Member member = memberRepository.findByEmail(userEmail)
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("No authentication information."));
 
         // add ROLE_ADMIN

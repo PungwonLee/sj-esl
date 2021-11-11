@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 public class FacilitySchedule {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "facility_id")
     private int id;
 

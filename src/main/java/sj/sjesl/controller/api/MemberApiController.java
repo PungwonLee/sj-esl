@@ -1,26 +1,19 @@
 package sj.sjesl.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sj.sjesl.config.auth.PrincipalDetail;
+import sj.sjesl.config.auth.SecurityUtil;
 import sj.sjesl.entity.Member;
-import sj.sjesl.exception.BadRequestException;
-import sj.sjesl.payload.ApiResponse;
+import sj.sjesl.inquiry.InquirySaveRequestDto;
 import sj.sjesl.repository.MemberRepository;
 import sj.sjesl.service.MemberService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 @RestController
 
@@ -58,11 +51,23 @@ public class MemberApiController {
     }
 
 
-    @GetMapping("member/user")
-    public  String user(){
+    @PostMapping("member/user")
+    public  String user(@RequestBody InquirySaveRequestDto requestDto , @RequestHeader HttpHeaders header){
+        System.out.println(header);
+        System.out.println(header.getFirst("Authorization"));
         return "user";
     }
 
+
+    @GetMapping("member/user")
+    public  Member user(){
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        System.out.println(memberId);
+        Member member = memberRepository.findByMemberId(memberId);
+        System.out.println(member);
+
+        return member;
+    }
 
 
 

@@ -14,7 +14,7 @@ import java.util.List;
 public class Facility {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "facility_name")
     private Long id;
 
@@ -50,5 +50,18 @@ public class Facility {
 
     public Facility() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "Facility{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", building='" + building + '\'' +
+                ", floor='" + floor + '\'' +
+                ", capacity=" + capacity +
+                ", cost=" + cost +
+                ", category='" + category + '\'' +
+                '}';
     }
 }

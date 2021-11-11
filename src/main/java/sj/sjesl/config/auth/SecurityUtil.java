@@ -5,11 +5,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtil {
 
-    public static String getCurrentUserEmail() {
+    public static Long getCurrentMemberId() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getName() == null) {
+        if (authentication == null || ((PrincipalDetail) authentication.getPrincipal()).getMember().getId()  == null) {
             throw new RuntimeException("No authentication information.");
         }
-        return authentication.getName();
+        return ((PrincipalDetail) authentication.getPrincipal()).getMember().getId() ;
     }
 }
