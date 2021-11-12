@@ -43,8 +43,8 @@ class RepositoryTest {
     public void testMember() {
         Member member = new Member();
         memberRepository.save(member);
-
-//        ReservationInquiry reservationInquiry = new ReservationInquiry(member, "안녕", "이거야");
+        LocalDateTime selectDate_1 ;
+    //        ReservationInquiry reservationInquiry = new ReservationInquiry(member, "안녕", "이거야");
 //        reservationInquiryRepository.save(reservationInquiry);
     }
     @Test
