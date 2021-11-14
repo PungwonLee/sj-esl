@@ -56,4 +56,19 @@ public class Reservation {
     public Reservation() {
 
     }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", facility=" + facility +
+                ", startDateTime=" + startDateTime +
+                ", endTDateTime=" + endTDateTime +
+                ", username='" + username + '\'' +
+                ", purpose='" + purpose + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", 인원수=" + 인원수 +
+                ", reservationStatus=" + reservationStatus +
+                '}';
+    }
 }
