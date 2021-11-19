@@ -1,6 +1,8 @@
 package sj.sjesl.entity;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
@@ -11,11 +13,12 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class Facility {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "facility_name")
+    @Column(name = "facility_id")
     private Long id;
 
     @Column(nullable = false)
@@ -39,6 +42,7 @@ public class Facility {
     @OneToMany(mappedBy = "facility")
     private List<Reservation> reservations = new ArrayList<>();
 
+    @Builder
     public Facility(String name, String building, String floor, int capacity, int cost, String category) {
         this.name = name;
         this.building = building;
@@ -48,8 +52,13 @@ public class Facility {
         this.category = category;
     }
 
-    public Facility() {
-
+    public void update(String name, String building, String floor, int capacity, int cost, String category){
+        this.name = name;
+        this.building = building;
+        this.floor = floor;
+        this.capacity = capacity;
+        this.cost = cost;
+        this.category = category;
     }
 
     @Override

@@ -50,37 +50,30 @@ class RepositoryTest {
     //        ReservationInquiry reservationInquiry = new ReservationInquiry(member, "안녕", "이거야");
 //        reservationInquiryRepository.save(reservationInquiry);
     }
-    @Test
-    public void 연습() {
-//        LocalDateTime dateTime= LocalDateTime.now();
-        LocalDateTime selectDate_1 = LocalDateTime.of(2021,12,19,0,0);
-        LocalDateTime selectDate_2 = LocalDateTime.of(2021,12,19,23,59);
-
-
-        boolean bool[] = new boolean[31];
-        Arrays.fill(bool,true);
-
-        List<Reservation> reservations = em.createQuery("select r from Reservation  r where r.startDateTime <= :selectDate_2 and :selectDate_1 <=r.endTDateTime")
-                .setParameter("selectDate_1", selectDate_1)
-                .setParameter("selectDate_2", selectDate_2)
-                .getResultList();
-
-        int flag=0;
-        for ( Reservation r: reservations){
-
-            if( r.getEndTDateTime().getDayOfWeek() ==selectDate_1.getDayOfWeek()){
-                System.out.println(r.getEndTDateTime().toLocalTime());
-            }
-            else{
-
-            }
-
-        }
-
-
-
-    }
-
-
-
+//    @Test
+//    public void 연습() {
+////        LocalDateTime dateTime= LocalDateTime.now();
+//        LocalDateTime selectDate_1 = LocalDateTime.of(2021,12,19,0,0);
+//        LocalDateTime selectDate_2 = LocalDateTime.of(2021,12,19,23,59);
+//
+//
+//        boolean bool[] = new boolean[31];
+//        Arrays.fill(bool,true);
+//
+//        List<Reservation> reservations = em.createQuery("select r from Reservation  r where r.startDateTime <= :selectDate_2 and :selectDate_1 <=r.endTDateTime")
+//                .setParameter("selectDate_1", selectDate_1)
+//                .setParameter("selectDate_2", selectDate_2)
+//                .getResultList();
+//
+//        int flag=0;
+//        for ( Reservation r: reservations){
+//
+//            if( r.getEndTDateTime().getDayOfWeek() ==selectDate_1.getDayOfWeek()){
+//                System.out.println(r.getEndTDateTime().toLocalTime());
+//            }
+//            else{
+//
+//            }
+//        }
+//    }
 }

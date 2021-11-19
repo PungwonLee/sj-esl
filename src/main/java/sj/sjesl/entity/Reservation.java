@@ -1,74 +1,54 @@
 package sj.sjesl.entity;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sj.sjesl.entity.BaseEntity;
+import sj.sjesl.entity.Facility;
+import sj.sjesl.entity.Member;
+import sj.sjesl.entity.ReservationStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
-public class Reservation {
+@NoArgsConstructor
+public class Reservation extends BaseEntity {
 
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
-    private int id;
-
-//    @ManyToOne
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "name")
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "facility_id")
     private Facility facility;
 
+    private LocalDateTime startTime;
 
-//    private LocalDateTime reservationDate;
-
-    private LocalDateTime startDateTime;
-
-    private LocalDateTime endTDateTime;
-
-    private String username;
+    private LocalDateTime endTime;
 
     private String purpose;
 
-    private String mobile;
+//    private ReservationStatus reservationStatus;
 
-    private int 인원수;
 
-    private ReservationStatus reservationStatus;
-
-    public Reservation(Facility facility, LocalDateTime startDateTime, LocalDateTime endTDateTime, String username, String purpose, String mobile, int 인원수, ReservationStatus reservationStatus) {
+    @Builder
+    public Reservation(Member member, Facility facility,
+                       LocalDateTime startTime, LocalDateTime endTime, String purpose) {
+        this.member = member;
         this.facility = facility;
-        this.startDateTime = startDateTime;
-        this.endTDateTime = endTDateTime;
-        this.username = username;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.purpose = purpose;
-        this.mobile = mobile;
-        this.인원수 = 인원수;
-        this.reservationStatus = reservationStatus;
     }
 
-    public Reservation() {
-
-    }
-
-    @Override
-    public String toString() {
-        return "Reservation{" +
-                "id=" + id +
-                ", facility=" + facility +
-                ", startDateTime=" + startDateTime +
-                ", endTDateTime=" + endTDateTime +
-                ", username='" + username + '\'' +
-                ", purpose='" + purpose + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", 인원수=" + 인원수 +
-                ", reservationStatus=" + reservationStatus +
-                '}';
-    }
 }

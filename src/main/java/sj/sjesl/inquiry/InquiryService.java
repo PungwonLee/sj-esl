@@ -50,4 +50,9 @@ public class InquiryService {
 
         inquiryRepository.delete(inquiry);
     }
+//
+//    public void findByUserId(Long id){
+//        ReservationInquiry inquiry = inquiryRepository.findBy
+//
+//    }
 }

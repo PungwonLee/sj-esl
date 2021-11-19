@@ -35,15 +35,7 @@ public class ReservationInquiry extends BaseEntity {
     private LocalDateTime replyDate;
     private String replyDetails;
 
-    public ReservationInquiry(String author, String title, String content, LocalDateTime answerDate, String answerContent, LocalDateTime replyDate, String replyDetails) {
-        this.author = author;
-        this.title = title;
-        this.content = content;
-        this.answerDate = answerDate;
-        this.answerContent = answerContent;
-        this.replyDate = replyDate;
-        this.replyDetails = replyDetails;
-    }
+
 
     @Builder
     public ReservationInquiry(String author, String title, String content) {

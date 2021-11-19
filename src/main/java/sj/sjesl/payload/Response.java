@@ -46,6 +46,7 @@ public class Response {
                 .build();
         return ResponseEntity.ok(body);
     }
+
     public ResponseEntity<?> success(Object data, Member member, String msg, HttpStatus status) {
         Body body = Body.builder()
                 .state(status.value())

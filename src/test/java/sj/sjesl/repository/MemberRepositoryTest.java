@@ -15,6 +15,7 @@ import sj.sjesl.dto.ExcelReservationDto;
 import sj.sjesl.dto.ExcelSubjectDto;
 import sj.sjesl.entity.*;
 import sj.sjesl.dto.ExcelFacilityDto;
+import sj.sjesl.reservation.FacilityDateRequestDto;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,10 +24,11 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 @SpringBootTest
 @Transactional
@@ -147,65 +149,6 @@ class MemberRepositoryTest {
             subjectRepository.save(subject);
         }
 
-        /////////////////////예약내역 삽입
-        em.flush();
-        em.clear();
-
-
-        SimpleDateFormat recvSimpleFormat = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-
-        //원하는 포맷 넣기.
-        SimpleDateFormat tranSimpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
-
-
-
-
-        opcPackage = OPCPackage.open(new File("src\\main\\resources\\Reservation_history.xlsx"));
-
-
-         workbook = new XSSFWorkbook(opcPackage);
-
-
-        worksheet = workbook.getSheetAt(0);
-
-
-        for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
-
-            Row row = worksheet.getRow(i);
-            if(row.getCell(0,Row.CREATE_NULL_AS_BLANK) ==null) break;
-            ExcelReservationDto data = new ExcelReservationDto();
-
-            data.setFacility(row.getCell(0,Row.CREATE_NULL_AS_BLANK).getStringCellValue());
-//            data.setStartDateTime(LocalDateTime.parse(row.getCell(1,Row.CREATE_NULL_AS_BLANK).getStringCellValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//            data.setEndTDateTime(LocalDateTime.parse(row.getCell(2,Row.CREATE_NULL_AS_BLANK).getStringCellValue(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            data.setUsername(row.getCell(3,Row.CREATE_NULL_AS_BLANK).getStringCellValue());
-            data.setPurpose(row.getCell(4,Row.CREATE_NULL_AS_BLANK).getStringCellValue());
-            data.setMobile(row.getCell(5,Row.CREATE_NULL_AS_BLANK).getStringCellValue());
-            data.setReservationStatus(ReservationStatus.COMPLETION);
-
-
-
-            try {
-                Date date = recvSimpleFormat.parse(row.getCell(1,Row.CREATE_NULL_AS_BLANK).getDateCellValue().toString());
-                String strDate = tranSimpleFormat.format(date);
-                data.setStartDateTime(LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-
-                date = recvSimpleFormat.parse(row.getCell(2,Row.CREATE_NULL_AS_BLANK).getDateCellValue().toString());
-                strDate = tranSimpleFormat.format(date);
-                data.setEndTDateTime(LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-
-            Facility facilty = facilityRepository.findByName(data.getFacility());
-            Reservation reservation = new Reservation(facilty,data.getStartDateTime(),data.getEndTDateTime(),data.getUsername(),data.getPurpose(),data.getMobile(),0,data.getReservationStatus());
-
-            reservationRepository.save(reservation);
-        }
     }
 
 
