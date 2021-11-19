@@ -55,6 +55,15 @@ public class Member implements Persistable<Long> {
         this.password = password;
     }
 
+    public Member(Long userId, String username, String email, String mobile, String password, MemberPrivileges privileges) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.mobile = mobile;
+        this.password = password;
+        this.privileges = privileges;
+    }
+
     @Override
     public Long getId() {
         return this.memberId;

@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import sj.sjesl.entity.MemberPrivileges;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 public class MemberResponseDto {
 
@@ -29,6 +33,26 @@ public class MemberResponseDto {
                     ", refreshToken='" + refreshToken + '\'' +
                     ", refreshTokenExpirationTime=" + refreshTokenExpirationTime +
                     '}';
+        }
+    }
+    @Builder
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class MemberCheckResponse {
+        private Long user_id;
+        @Enumerated(EnumType.STRING)
+        private MemberPrivileges memberPrivileges;
+
+        @Override
+        public String toString() {
+            return "TokenInfo{" +
+                    "user_id=" + user_id +
+                    ", memberPrivileges=" + memberPrivileges +
+                    '}';
+        }
+
+        public MemberCheckResponse() {
         }
     }
 }

@@ -60,9 +60,7 @@ public class MemberService {
             return response.fail("이미 회원가입된 이메일입니다.", HttpStatus.BAD_REQUEST);
         }
 
-        Member member= new Member();
-        member.setEmail(signUp.getEmail());
-        member.setPassword(signUp.getPassword());
+        Member member= new Member(signUp.getUserId(), signUp.getUsername(), signUp.getEmail(),  signUp.getMobile(), signUp.getPassword(),signUp.getMemberPrivileges());
         Member join = join(member);
 
 

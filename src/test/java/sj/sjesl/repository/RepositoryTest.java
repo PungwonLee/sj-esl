@@ -41,39 +41,27 @@ class RepositoryTest {
     FacilityRepository facilityRepository;
     @Autowired
     SubjectRepository subjectRepository;
+    @Autowired
+    ScheduleRepository scheduleRepository;
 
+    @Autowired
+    SchoolMemberDBRepository schoolMemberDBRepository;
     @Test
     public void testMember() {
         Member member = new Member();
         memberRepository.save(member);
-        LocalDateTime selectDate_1 ;
-    //        ReservationInquiry reservationInquiry = new ReservationInquiry(member, "안녕", "이거야");
+        LocalDateTime selectDate_1;
+        //        ReservationInquiry reservationInquiry = new ReservationInquiry(member, "안녕", "이거야");
 //        reservationInquiryRepository.save(reservationInquiry);
     }
-//    @Test
-//    public void 연습() {
-////        LocalDateTime dateTime= LocalDateTime.now();
-//        LocalDateTime selectDate_1 = LocalDateTime.of(2021,12,19,0,0);
-//        LocalDateTime selectDate_2 = LocalDateTime.of(2021,12,19,23,59);
-//
-//
-//        boolean bool[] = new boolean[31];
-//        Arrays.fill(bool,true);
-//
-//        List<Reservation> reservations = em.createQuery("select r from Reservation  r where r.startDateTime <= :selectDate_2 and :selectDate_1 <=r.endTDateTime")
-//                .setParameter("selectDate_1", selectDate_1)
-//                .setParameter("selectDate_2", selectDate_2)
-//                .getResultList();
-//
-//        int flag=0;
-//        for ( Reservation r: reservations){
-//
-//            if( r.getEndTDateTime().getDayOfWeek() ==selectDate_1.getDayOfWeek()){
-//                System.out.println(r.getEndTDateTime().toLocalTime());
-//            }
-//            else{
-//
-//            }
-//        }
-//    }
+    @Test
+    public void 연습() {
+
+        SchoolMemberDB schoolMemberDB = new SchoolMemberDB(18013195L,"이풍원","01083629577",MemberPrivileges.PROFESSOR);
+        SchoolMemberDB schoolMemberDB1 = new SchoolMemberDB(18013194L,"가","01012345678",MemberPrivileges.STUDENT);
+        SchoolMemberDB schoolMemberDB2 = new SchoolMemberDB(18013196L,"아","01011111111",MemberPrivileges.STUDENT);
+        schoolMemberDBRepository.save(schoolMemberDB);
+        schoolMemberDBRepository.save(schoolMemberDB1);
+        schoolMemberDBRepository.save(schoolMemberDB2);
+    }
 }

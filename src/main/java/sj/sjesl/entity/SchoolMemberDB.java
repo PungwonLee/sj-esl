@@ -18,8 +18,14 @@ public class SchoolMemberDB {
     private Long id;
     private String username;
     private String mobile;
-    private String privilege;
 
+    @Enumerated(EnumType.STRING)
+    private MemberPrivileges privilege;
 
-
+    public SchoolMemberDB(Long id, String username, String mobile, MemberPrivileges privilege) {
+        this.id = id;
+        this.username = username;
+        this.mobile = mobile;
+        this.privilege = privilege;
+    }
 }
