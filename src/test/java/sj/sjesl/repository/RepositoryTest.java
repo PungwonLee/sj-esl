@@ -57,11 +57,15 @@ class RepositoryTest {
     @Test
     public void 연습() {
 
-        SchoolMemberDB schoolMemberDB = new SchoolMemberDB(18013195L,"이풍원","01083629577",MemberPrivileges.PROFESSOR);
+        SchoolMemberDB schoolMemberDB = new SchoolMemberDB(18013195L,"이풍원","01083629577",MemberPrivileges.STUDENT);
         SchoolMemberDB schoolMemberDB1 = new SchoolMemberDB(18013194L,"가","01012345678",MemberPrivileges.STUDENT);
         SchoolMemberDB schoolMemberDB2 = new SchoolMemberDB(18013196L,"아","01011111111",MemberPrivileges.STUDENT);
+        SchoolMemberDB schoolMemberDB3 = new SchoolMemberDB(2020202L,"문현준","01033339999",MemberPrivileges.PROFESSOR);
+        SchoolMemberDB schoolMemberDB4 = new SchoolMemberDB(9922922L,"권기학","01012345678",MemberPrivileges.PROFESSOR);
         schoolMemberDBRepository.save(schoolMemberDB);
         schoolMemberDBRepository.save(schoolMemberDB1);
         schoolMemberDBRepository.save(schoolMemberDB2);
+        schoolMemberDBRepository.save(schoolMemberDB3);
+        schoolMemberDBRepository.save(schoolMemberDB4);
     }
 }

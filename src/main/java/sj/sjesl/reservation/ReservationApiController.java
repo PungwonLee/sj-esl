@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 public class ReservationApiController {
 
-    private  ReservationService reservationService;
+    private final ReservationService reservationService;
 
     @ApiOperation(value = "예약 가능한 건물 리스트 조회")
     @GetMapping("/reservation/building")     //예약가능한 강의실 건물 이름 리스트 리턴
@@ -39,8 +39,9 @@ public class ReservationApiController {
     }
 
     @ApiOperation(value = "예약 등록")
-    @PostMapping("/reservation/")
+    @PostMapping("/reservation")
     public Long save(@RequestBody ReservationRequestDto requestDto){
+        System.out.println(requestDto);
         return reservationService.save(requestDto);
     }
 
