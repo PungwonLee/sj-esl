@@ -22,8 +22,10 @@ import sj.sjesl.dto.MemberRequestDto;
 import sj.sjesl.dto.MemberResponseDto;
 import sj.sjesl.entity.Member;
 import sj.sjesl.entity.MemberPrivileges;
+import sj.sjesl.entity.SchoolMemberDB;
 import sj.sjesl.payload.Response;
 import sj.sjesl.repository.MemberRepository;
+import sj.sjesl.repository.SchoolMemberDBRepository;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -42,13 +44,13 @@ public class MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final RedisTemplate redisTemplate;
     private final AuthenticationManager authenticationManager;
+    private final SchoolMemberDBRepository schoolMemberDBRepository;
     @Transactional
     public Member join(Member member){
         String rawPassword= member.getPassword();
         String encPassword= encoder.encode(rawPassword);
         member.setPassword(encPassword);
 
-        member.setPrivileges(MemberPrivileges.STUDENT);   //나중에 바꿀것.
         Member save = memberRepository.save(member);
         return save;
     }
@@ -59,8 +61,27 @@ public class MemberService {
         if (memberRepository.existsByEmail(signUp.getEmail())) {
             return response.fail("이미 회원가입된 이메일입니다.", HttpStatus.BAD_REQUEST);
         }
+        MemberResponseDto.MemberCheckResponse memberCheckResponse =  new MemberResponseDto.MemberCheckResponse();
 
-        Member member= new Member(signUp.getUserId(), signUp.getUsername(), signUp.getEmail(),  signUp.getMobile(), signUp.getPassword(),signUp.getMemberPrivileges());
+        SchoolMemberDB byMobile = schoolMemberDBRepository.findByMobile(signUp.getMobile());
+        if (byMobile==null){
+            memberCheckResponse.setMemberPrivileges(MemberPrivileges.GUEST);
+            memberCheckResponse.setUser_id(null);
+        }
+
+        else if(byMobile.getPrivilege()==MemberPrivileges.STUDENT){
+            memberCheckResponse.setMemberPrivileges(MemberPrivileges.STUDENT);
+            memberCheckResponse.setUser_id(byMobile.getId());
+        }
+        else{
+            memberCheckResponse.setMemberPrivileges(MemberPrivileges.PROFESSOR);
+            memberCheckResponse.setUser_id(byMobile.getId());
+        }
+
+//        return response.success(memberCheckResponse,"디비 정보 조회를 성공하였습니다.", HttpStatus.OK);
+        System.out.println(memberCheckResponse);
+        System.out.println(byMobile);
+        Member member= new Member(memberCheckResponse.getUser_id(), signUp.getUsername(), signUp.getEmail(),  signUp.getMobile(), signUp.getPassword(),memberCheckResponse.getMemberPrivileges());
         Member join = join(member);
 
 

@@ -26,9 +26,7 @@ public class MemberRequestDto {
 
         private String username;
         private String mobile;
-        private Long userId;
-        @Enumerated(EnumType.STRING)
-        private MemberPrivileges memberPrivileges;
+
 
 
     }

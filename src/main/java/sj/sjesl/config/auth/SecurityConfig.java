@@ -101,13 +101,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-//                .addFilter(corsFilter)
+                .addFilter(corsFilter)
                 .formLogin().disable()
                 .httpBasic().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/api/auth/login", "/api/auth/**", "/api/user/register/**","/api/user/register","/swagger-ui/**","/inquiry/**").permitAll()
 //                .antMatchers("/member/**").hasRole("GUEST") //수정해야할부분
                 .antMatchers("/member/**").access("hasRole('ROLE_STUDENT') or hasRole('ROLE_ADMIN') or hasRole('ROLE_GUEST')") //수정해야할부분
+                .antMatchers("/reservation/**").access("hasRole('ROLE_STUDENT') or hasRole('ROLE_ADMIN') or hasRole('ROLE_GUEST')") //수정해야할부분
                 .anyRequest().permitAll()
 
 //                .and()
